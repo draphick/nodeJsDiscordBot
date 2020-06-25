@@ -12,7 +12,7 @@ Object.keys(botCommands).map(key => {
   bot.commands.set(TRIGGER + botCommands[key].name, botCommands[key])
 })
 
-// bot.login(process.env.TOKEN)
+bot.login(process.env.TOKEN)
 // end of discord set-up ----
 
 // express/mongoose/mongodb set-up ----
@@ -54,7 +54,7 @@ bot.on('message', msg => {
   }
   // if command is in object array, execute the execute key from the object array
   try {
-    console.log('Command running -', command)
+    // console.log('Command running -', command)
     bot.commands.get(command).execute(msg, args)
   } catch (error) {
     console.error(error)

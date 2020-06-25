@@ -3,7 +3,8 @@ const Fat = require('../models/fat')
 const FatTracking = require('../models/fattracking')
 
 
-const debugAddDays = (days) => {
+const debugAddDays = () => {
+    days = 0
     const olddate = new Date()
     const copy = new Date(Number(olddate))
     copy.setDate(olddate.getDate() + days)
@@ -77,6 +78,16 @@ const delWorkout = async (req) => {
 }
 
 const createTrackingEntry = async (req,todayis) => {
+    const actionName = Object.keys(req.body.actions)[0]
+    const actionValue = Object.values(req.body.actions)[0]
+    const workouts = await getWorkoutsForUser(req)
+    if (!workouts){
+        return false
+    }
+    workoutExistsCheck = workouts.find((workoutname) => workoutname.trackingName === actionName)
+    if (!workoutExistsCheck){
+        return false
+    }
     const currentTracking = await FatTracking.findOne({ 
         workoutUser: req.body.workoutUser,
         date: todayis
@@ -89,8 +100,7 @@ const createTrackingEntry = async (req,todayis) => {
         await track.save()
         return track
     }
-    const actionName = Object.keys(req.body.actions)[0]
-    const actionValue = Object.values(req.body.actions)[0]
+
     if (currentTracking.get('actions').has(actionName)){
         const actionValueOld = currentTracking.actions.get(actionName)
         const actionValueNew = parseInt(actionValueOld, 10) + parseInt(actionValue, 10)
@@ -122,12 +132,37 @@ const getTodaysProgress = async (req,todayis) => {
     const wocurrego = []
     workouts.forEach((workout) => {
         const wo = workout['trackingName']
-        const cur = todaysProgress.actions.get(wo)
+        try{
+            cur = todaysProgress.actions.get(wo) || 0
+        } catch (error) {
+            cur = 0
+        }
         const go = workout['goal']
         const re = go - cur
         wocurrego.push({wo, cur, re, go})
     })
+    if (!wocurrego) {
+        return false
+    }
     return wocurrego
+}
+
+const getTodaysProgressSingle = async (req,todayis,actionName) => {
+    const workouts = await getWorkoutsForUser(req)
+    const todaysProgress = await getTrackingEntry(req,todayis)
+    const wocurrego = []
+    workouts.forEach((workout) => {
+        const wo = workout['trackingName']
+        const cur = todaysProgress.actions.get(wo) || 0
+        const go = workout['goal']
+        const re = go - cur
+        wocurrego.push({wo, cur, re, go})
+    })
+    const currentWorkoutRequest = wocurrego.find((workoutname) => workoutname.wo === actionName)
+    if (!currentWorkoutRequest){
+        return false
+    }
+    return currentWorkoutRequest
 }
 
 module.exports = {
@@ -141,5 +176,6 @@ module.exports = {
     createTrackingEntry:createTrackingEntry,
     getTrackingEntry: getTrackingEntry,
     updateWorkoutsForUser: updateWorkoutsForUser,
-    getTodaysProgress: getTodaysProgress
+    getTodaysProgress: getTodaysProgress,
+    getTodaysProgressSingle: getTodaysProgressSingle
 }

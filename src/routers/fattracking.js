@@ -9,6 +9,9 @@ router.post('/api/v1/tracking', isUser, async (req, res) => {
     const todayis = newday.toISOString().split('T',1).toString()
     try {
         const trackingEntry = await discExpr.createTrackingEntry(req, todayis)
+        if (!trackingEntry){
+            res.status(404).send('Workout not found, add entry to your goal first.')
+        }
         res.status(200).send(trackingEntry)
     } catch (error) {
         console.log(error)
