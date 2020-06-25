@@ -17,8 +17,10 @@ module.exports = {
         }        
         discExpr.getUser(check).then((res) => {
             if (!res){
-                msg.channel.send('You are not a user, please use `!fat join` to join the party!')
-                return false
+                if (args[0] != 'join') {
+                    msg.channel.send('You are not a user, please use `!fat join` to join the party!')
+                    return false
+                }
             }
             return true
         }).then((isUserAvlive) => {
