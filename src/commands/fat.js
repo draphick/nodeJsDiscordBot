@@ -18,14 +18,12 @@ module.exports = {
         discExpr.getUser(check).then((res) => {
             if (!res){
                 if (args[0] != 'join') {
-                    msg.channel.send('You are not a user, please use `!fat join` to join the party!')
+                    msg.channel.send('You are not a user, please use `'  + TRIGGER + 'fat join` to join the party!')
                     return false
                 }
             }
             return true
-        }).then((isUserAvlive) => {
-            console.log(isUserAvlive)
-            
+        }).then((isUserAvlive) => {            
             if (args[0] === 'join') {
                 req.body = {
                     "discordName": msg.author.username,
@@ -76,7 +74,7 @@ module.exports = {
                     fullmsg += '```'
                     msg.channel.send(fullmsg)
                 }).catch((error) =>{
-                    msg.channel.send('You have nothing to track.  See `!fat` for your options.')
+                    msg.channel.send('You have nothing to track.  See `'  + TRIGGER + 'fat` for your options.')
                 })
                 return
             }
@@ -153,7 +151,7 @@ module.exports = {
                         const current = todaysProgross['cur']
                         fullmsg = 'Added ' + args[1] + ' to your ' + args[0] + ' goal! \n'
                         fullmsg += 'You are at ' + current + ' total with ' + totalleft + ' more to do to hit your goal of ' + goal + '!!'
-                        fullmsg += '\nUse `!fat info` for more details on all your goals.'
+                        fullmsg += '\nUse `'  + TRIGGER + 'fat info` for more details on all your goals.'
                         msg.channel.send(fullmsg)
                     }).catch((error) => {
                         console.log(error)
@@ -164,19 +162,19 @@ module.exports = {
                         fullmsg = 'Need some help?  See below:\n\
     ```\nEXAMPLES\n\
     _______\n\
-    !fat join\n\
+    '  + TRIGGER + 'fat join\n\
     // Join the fat craze!\n\
-    !fat unjoin\n\
+    '  + TRIGGER + 'fat unjoin\n\
     // Leave the fat craze. :(\n\
-    !fat squats add\n\
+    '  + TRIGGER + 'fat squats add\n\
     //adds \'squats\' to your goals\n\
-    !fat squats goal 200\n\
+    '  + TRIGGER + 'fat squats goal 200\n\
     //edits \'squats\' goal to be 200\n\
-    !fat squats remove\n\
+    '  + TRIGGER + 'fat squats remove\n\
     //removes \'squats\' from your goal list\n\
-    !fat squats 100\n\
+    '  + TRIGGER + 'fat squats 100\n\
     //adds 100 to your current \'squats\' tracking for today\n\
-    !fat info\n\
+    '  + TRIGGER + 'fat info\n\
     //Gives you your current stats for today```'
                         msg.channel.send(fullmsg)
                         return
