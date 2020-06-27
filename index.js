@@ -1,20 +1,6 @@
 // https://www.sitepoint.com/discord-bot-node-js/
 // https://discord.js.org/#/docs/main/v11/general/welcome
 
-// discord bot set-up ----
-require('dotenv').config()
-const Discord = require('discord.js')
-const bot = new Discord.Client()
-bot.commands = new Discord.Collection()
-const botCommands = require('./src/commands')
-const TRIGGER = process.env.TRIGGER || '!'
-Object.keys(botCommands).map(key => {
-  bot.commands.set(TRIGGER + botCommands[key].name, botCommands[key])
-})
-
-bot.login(process.env.TOKEN)
-// end of discord set-up ----
-
 // express/mongoose/mongodb set-up ----
 require('./src/db/mongoose')
 const express = require('express')
@@ -31,6 +17,20 @@ app.listen(port, () => {
     console.log('Server is up on port: ', port)
 })
 // end of express/mongoose/mongodb set-up ----
+
+// discord bot set-up ----
+require('dotenv').config()
+const Discord = require('discord.js')
+const bot = new Discord.Client()
+bot.commands = new Discord.Collection()
+const botCommands = require('./src/commands')
+const TRIGGER = process.env.TRIGGER || '!'
+Object.keys(botCommands).map(key => {
+  bot.commands.set(TRIGGER + botCommands[key].name, botCommands[key])
+})
+
+bot.login(process.env.TOKEN)
+// end of discord set-up ----
 
 // discord bot ready ----
 bot.on('ready', () => {

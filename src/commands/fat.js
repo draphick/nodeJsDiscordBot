@@ -7,18 +7,18 @@ const TRIGGER = process.env.TRIGGER || '!'
 module.exports = {
     name: 'fat',
     description: 'Fat stats bro!',
-    execute(msg, args) {   
-        console.log(msg.author.id + " --- discordID")
+    execute({channel,author}, args) {   
+        console.log(author.id + " --- discordID")
         const req = {}
         check = {
             body: {
-                "discordId":  msg.author.id
+                "discordId":  author.id
             }
         }        
         discExpr.getUser(check).then((res) => {
             if (!res){
                 if (args[0] != 'join') {
-                    msg.channel.send('You are not a user, please use `'  + TRIGGER + 'fat join` to join the party!')
+                    channel.send('You are not a user, please use `'  + TRIGGER + 'fat join` to join the party!')
                     return false
                 }
             }
@@ -26,35 +26,35 @@ module.exports = {
         }).then((isUserAvlive) => {            
             if (args[0] === 'join') {
                 req.body = {
-                    "discordName": msg.author.username,
-                    "discordId": msg.author.id,
-                    "discordTag": msg.author.tag,
-                    "discordAvatarURL": msg.author.displayAvatarURL,
+                    "discordName": author.username,
+                    "discordId": author.id,
+                    "discordTag": author.tag,
+                    "discordAvatarURL": author.displayAvatarURL,
                     "email": "none@none.com"
                 }
                     discExpr.createUser(req).then((res) => {
-                        msg.channel.send('You are all set up!')
+                        channel.send('You are all set up!')
                     }).catch((error) => {
                         console.log(error)
-                        msg.channel.send('You already have a profile set-up!')
+                        channel.send('You already have a profile set-up!')
                     })
                 return
             }
             if (args[0] === 'unjoin') {
-                req.body = { "discordId":  msg.author.id }
+                req.body = { "discordId":  author.id }
                 discExpr.delUser(req).then((res) => {
                     if (res){
-                        msg.channel.send('All dead.')
+                        channel.send('All dead.')
                         return
                     }
-                    msg.channel.send('Nothing to unjoin.  Oh well.')
+                    channel.send('Nothing to unjoin.  Oh well.')
                 }).catch((error) => {
                     console.log(error)
                 })
                 return
             }
             if (args[0] === 'info' && isUserAvlive) {
-                req.body = { "workoutUser":  msg.author.id }
+                req.body = { "workoutUser":  author.id }
                 const newday = discExpr.debugAddDays(0)
                 const todayis = newday.toISOString().split('T',1).toString()
                 discExpr.getTodaysProgress(req, todayis).then((stats) => {
@@ -72,9 +72,9 @@ module.exports = {
                         
                     })
                     fullmsg += '```'
-                    msg.channel.send(fullmsg)
+                    channel.send(fullmsg)
                 }).catch((error) =>{
-                    msg.channel.send('You have nothing to track.  See `'  + TRIGGER + 'fat` for your options.')
+                    channel.send('You have nothing to track.  See `'  + TRIGGER + 'fat` for your options.')
                 })
                 return
             }
@@ -84,46 +84,46 @@ module.exports = {
             switch(true) {
                 case (args[1] === 'add' && isUserAvlive):
                     req.body = { 
-                        "workoutUser":  msg.author.id,
+                        "workoutUser":  author.id,
                         "trackingName": args[0]
                     }
                     discExpr.createWorkout(req).then((workout) => {
                         if (!workout) {
-                            msg.channel.send('This workout already exists.')
+                            channel.send('This workout already exists.')
                             return
                         }
-                        msg.channel.send('I have added ' + args[0] + ' to your routine with a goal of 100!  GLHF! ')
+                        channel.send('I have added ' + args[0] + ' to your routine with a goal of 100!  GLHF! ')
                     }).catch((error) => {
                         console.log(error)
                     })
                     break
                 case (args[1] === 'remove' && isUserAvlive):
                     req.body = { 
-                        "workoutUser":  msg.author.id,
+                        "workoutUser":  author.id,
                         "trackingName": args[0]
                     }
                     discExpr.delWorkout(req).then((workout) => {
                         if (!workout) {
-                            msg.channel.send('Workout not found! Try again.')
+                            channel.send('Workout not found! Try again.')
                             return
                         }
-                        msg.channel.send('Workout deleted: **' + args[0] + '** \nBye-bye gainz!')
+                        channel.send('Workout deleted: **' + args[0] + '** \nBye-bye gainz!')
                     }).catch((error) => {
                         console.log(error)
                     })
                     break
                 case (args[1] === 'goal' && isUserAvlive):
                     req.body = { 
-                        "workoutUser":  msg.author.id,
+                        "workoutUser":  author.id,
                         "trackingName": args[0],
                         "newGoal": args[2]
                     }
                     discExpr.updateWorkoutsForUser(req).then((workout) => {
                         if (!workout){
-                            msg.channel.send('You don\'t have a workout by this name.')
+                            channel.send('You don\'t have a workout by this name.')
                             return
                         }
-                        msg.channel.send('Your ' + args[0] + ' goal has been updated to ' + args[2] + '! :D')
+                        channel.send('Your ' + args[0] + ' goal has been updated to ' + args[2] + '! :D')
                     }).catch((error) => {
                         console.log(error)
                     })
@@ -132,7 +132,7 @@ module.exports = {
                     const newday = discExpr.debugAddDays(0)
                     const todayis = newday.toISOString().split('T',1).toString()
                     req.body = { 
-                        "workoutUser":  msg.author.id,
+                        "workoutUser":  author.id,
                         "actions": {
                             fakename: args[1]
                         }
@@ -141,7 +141,7 @@ module.exports = {
                     delete Object.assign(req.body.actions, {[args[0]]: req.body.actions['fakename'] })['fakename']
                     discExpr.createTrackingEntry(req, todayis).then((entry) => {
                         if (!entry){
-                            msg.channel.send('Workout not found. \nAdd your `' + args[0] + '` goal first running the command `' + TRIGGER + 'fat ' + args[0] + ' add`')
+                            channel.send('Workout not found. \nAdd your `' + args[0] + '` goal first running the command `' + TRIGGER + 'fat ' + args[0] + ' add`')
                             return
                         }
                         return discExpr.getTodaysProgressSingle(req,todayis,args[0])
@@ -152,7 +152,7 @@ module.exports = {
                         fullmsg = 'Added ' + args[1] + ' to your ' + args[0] + ' goal! \n'
                         fullmsg += 'You are at ' + current + ' total with ' + totalleft + ' more to do to hit your goal of ' + goal + '!!'
                         fullmsg += '\nUse `'  + TRIGGER + 'fat info` for more details on all your goals.'
-                        msg.channel.send(fullmsg)
+                        channel.send(fullmsg)
                     }).catch((error) => {
                         console.log(error)
                     })
@@ -176,7 +176,7 @@ module.exports = {
     //adds 100 to your current \'squats\' tracking for today\n\
     '  + TRIGGER + 'fat info\n\
     //Gives you your current stats for today```'
-                        msg.channel.send(fullmsg)
+                        channel.send(fullmsg)
                         return
                     }
             }
