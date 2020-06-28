@@ -8,7 +8,8 @@ module.exports = {
     name: 'fat',
     description: 'Fat stats bro!',
     execute({channel,author}, args) {   
-        console.log(author.id + " --- discordID")
+        console.log(author.name + " --- discordID")
+        console.log(args + " --- discordID")
         const req = {}
         check = {
             body: {
