@@ -4,7 +4,7 @@
   "description": "Discord bot for SitePoint",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon index.js"
+    "prod": "nodemon index.js"
   },
   "author": "Michiel Mulders",
   "license": "ISC",
