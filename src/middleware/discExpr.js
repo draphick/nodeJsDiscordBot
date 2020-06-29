@@ -5,7 +5,7 @@ const FatTracking = require('../models/fattracking')
 
 const debugAddDays = () => {
     days = 0
-    const olddate = new Date()
+    const olddate = new Date().toLocaleString("en-US", {timeZone: "America/Los_Angeles"})
     const copy = new Date(Number(olddate))
     copy.setDate(olddate.getDate() + days)
     return copy
