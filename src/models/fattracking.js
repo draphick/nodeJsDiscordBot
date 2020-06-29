@@ -5,7 +5,7 @@ const User = require('../models/user')
 
 const fatTrackingSchema = new mongoose.Schema({
     workoutUser: {
-        type: String,
+        type: Number,
         required: true,
         trim: true,
         ref: 'User'

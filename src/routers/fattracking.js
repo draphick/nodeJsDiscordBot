@@ -5,8 +5,8 @@ const isUser = require('../middleware/isuser')
 const discExpr = require('../middleware/discExpr')
 
 router.post('/api/v1/tracking', isUser, async (req, res) => {
-    const newday = await discExpr.debugAddDays(0)
-    const todayis = newday.toISOString().split('T',1).toString()
+    // const newday = await discExpr.debugAddDays(0)
+    const todayis = discExpr.debugAddDays(0).split(',',1).toString()
     try {
         const trackingEntry = await discExpr.createTrackingEntry(req, todayis)
         if (!trackingEntry){
@@ -20,8 +20,8 @@ router.post('/api/v1/tracking', isUser, async (req, res) => {
 })
 
 router.get('/api/v1/tracking', isUser, async (req, res) => {
-    const newday = await discExpr.debugAddDays(0)
-    const todayis = newday.toISOString().split('T',1).toString()
+    // const newday = await discExpr.debugAddDays(0)
+    const todayis = discExpr.debugAddDays(0).split(',',1).toString()
     try {
         const trackingEntry = await discExpr.getTrackingEntry(req, todayis)
         res.status(200).send(trackingEntry)
@@ -31,8 +31,8 @@ router.get('/api/v1/tracking', isUser, async (req, res) => {
 })
 
 router.get('/api/v1/todaysprogress', isUser, async (req, res) => {
-    const newday = await discExpr.debugAddDays(0)
-    const todayis = newday.toISOString().split('T',1).toString()
+    // const newday = await discExpr.debugAddDays(0)
+    const todayis = discExpr.debugAddDays(0).split(',',1).toString()
     try {
         const trackingEntry = await discExpr.getTodaysProgress(req, todayis)
         res.status(200).send(trackingEntry)

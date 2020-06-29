@@ -8,7 +8,7 @@ const debugAddDays = () => {
     const olddate = new Date()
     const copy = new Date(Number(olddate))
     copy.setDate(olddate.getDate() + days)
-    return copy
+    return copy.toLocaleString('en-US', {timeZone: "America/Los_Angeles"})
 }
 
 const createUser = async (req) => {
