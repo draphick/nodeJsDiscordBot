@@ -57,9 +57,8 @@ module.exports = {
             if (args[0] === 'info' && isUserAvlive) {
                 req.body = { "workoutUser":  author.id }
                 // const newday = discExpr.debugAddDays(0)
-                const todayis = discExpr.debugAddDays(0)
+                const todayis = discExpr.debugAddDays(0).split(',',1).toString()
                 console.log(todayis)
-                // const todayis = newday.toISOString().split('T',1).toString()
                 discExpr.getTodaysProgress(req, todayis).then((stats) => {
                     fullmsg = 'Here are your currents stats: ```\n'
                     stats.forEach((stat) => {
@@ -133,9 +132,8 @@ module.exports = {
                     break                
                 case (validator.isInt(args[1]) && isUserAvlive):
                     // const newday = discExpr.debugAddDays(0)
-                    const todayis = discExpr.debugAddDays(0)
+                    const todayis = discExpr.debugAddDays(0).split(',',1).toString()
                     console.log(todayis)
-                    // const todayis = newday.toISOString().split('T',1).toString()
                     req.body = { 
                         "workoutUser":  author.id,
                         "actions": {
