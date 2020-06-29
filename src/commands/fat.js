@@ -8,8 +8,9 @@ module.exports = {
     name: 'fat',
     description: 'Fat stats bro!',
     execute({channel,author}, args) {   
-        console.log(author.username + " --- discordID")
-        console.log(args + " --- discordID")
+        console.log(author.id + " --- discordUserID")
+        console.log(author.username + " --- discordUser")
+        console.log(args + " --- args")
         const req = {}
         check = {
             body: {
@@ -58,7 +59,6 @@ module.exports = {
                 req.body = { "workoutUser":  author.id }
                 // const newday = discExpr.debugAddDays(0)
                 const todayis = discExpr.debugAddDays(0).split(',',1).toString()
-                console.log(todayis)
                 discExpr.getTodaysProgress(req, todayis).then((stats) => {
                     fullmsg = 'Here are your currents stats: ```\n'
                     stats.forEach((stat) => {
@@ -133,7 +133,6 @@ module.exports = {
                 case (validator.isInt(args[1]) && isUserAvlive):
                     // const newday = discExpr.debugAddDays(0)
                     const todayis = discExpr.debugAddDays(0).split(',',1).toString()
-                    console.log(todayis)
                     req.body = { 
                         "workoutUser":  author.id,
                         "actions": {
