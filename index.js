@@ -55,7 +55,7 @@ bot.on('message', msg => {
   // if command is in object array, execute the execute key from the object array
   try {
     // console.log('Command running -', command)
-    bot.commands.get(command).execute(msg, args)
+    bot.commands.get(command).execute(msg, msg.content)
   } catch (error) {
     console.error(error)
     msg.reply('there was an error trying to execute that command! Send this message to Raph if it continues to be a problem:')
