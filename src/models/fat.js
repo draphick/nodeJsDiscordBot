@@ -4,8 +4,6 @@ const validator = require('validator')
 const Fat = mongoose.model('Fat', {
     workoutUser: {
         type: Number,
-        get: v => Math.round(v),
-        set: v => Math.round(v),
         required: true,
         trim: true,
         ref: 'User'

@@ -1,6 +1,7 @@
 const User = require('../models/user')
 const Fat = require('../models/fat')
 const FatTracking = require('../models/fattracking')
+const WhatTracking = require('../models/whattracking')
 
 
 const debugAddDays = () => {
@@ -158,11 +159,43 @@ const getTodaysProgressSingle = async (req,todayis,actionName) => {
         const re = go - cur
         wocurrego.push({wo, cur, re, go})
     })
+    console.log(wocurrego)
     const currentWorkoutRequest = wocurrego.find((workoutname) => workoutname.wo === actionName)
     if (!currentWorkoutRequest){
         return false
     }
     return currentWorkoutRequest
+}
+
+const createTrackThisEntry = async (req,todayis) => {
+    const whatName = Object.keys(req.body.what)[0]
+    const whatValue = Object.values(req.body.what)[0]
+    
+    const currentTracking = await WhatTracking.findOne({ 
+        discordId: req.body.discordId,
+        date: todayis
+    })
+    if (!currentTracking){
+        const track = new WhatTracking({
+            ...req.body,
+            date: todayis
+        })
+        await track.save()
+        return track
+    }
+
+    // if what value exists update entry
+    if (currentTracking.get('what').has(whatName)){
+        currentTracking.what.set(whatName, whatValue)
+        currentTracking.save()
+        return currentTracking
+    }
+    // if what value doesn't exist, add new entry
+    if (!currentTracking.get('what').has(whatName)){
+        currentTracking.what.set(whatName, whatValue)
+        currentTracking.save()
+        return currentTracking
+    }
 }
 
 module.exports = {
@@ -177,5 +210,6 @@ module.exports = {
     getTrackingEntry: getTrackingEntry,
     updateWorkoutsForUser: updateWorkoutsForUser,
     getTodaysProgress: getTodaysProgress,
-    getTodaysProgressSingle: getTodaysProgressSingle
+    getTodaysProgressSingle: getTodaysProgressSingle,
+    createTrackThisEntry: createTrackThisEntry
 }

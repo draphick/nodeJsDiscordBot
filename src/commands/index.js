@@ -1,5 +1,5 @@
 module.exports = {
   Fat: require('./fat'),
   Ping: require('./ping'),
-  ff: require('./qwer')
+  ff: require('./trackthis')
 };
