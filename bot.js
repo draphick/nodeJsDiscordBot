@@ -1,7 +1,17 @@
-// https://www.sitepoint.com/discord-bot-node-js/
-// https://discord.js.org/#/docs/main/v11/general/welcome
 
 // discord bot set-up ----
+require('./src/db/mongoose')
+const express = require('express')
+const userRouter = require('./src/routers/users')
+const fatRouter = require('./src/routers/fats')
+const fatTrackingRouter = require('./src/routers/fattracking')
+const app = express()
+const port = process.env.PORT
+app.use(express.json())
+app.use(userRouter)
+app.use(fatRouter)
+app.use(fatTrackingRouter)
+
 require('dotenv').config()
 const Discord = require('discord.js')
 const bot = new Discord.Client()
@@ -38,7 +48,7 @@ bot.on('message', msg => {
   // if command is in object array, execute the execute key from the object array
   try {
     // console.log('Command running -', command)
-    bot.commands.get(command).execute(msg, args)
+    bot.commands.get(command).execute(msg, msg.content)
   } catch (error) {
     console.error(error)
     msg.reply('there was an error trying to execute that command! Send this message to Raph if it continues to be a problem:')
