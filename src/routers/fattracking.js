@@ -19,7 +19,7 @@ router.post('/api/v1/tracking', isUser, async (req, res) => {
     }
 })
 
-router.get('/api/v1/tracking', isUser, async (req, res) => {
+router.post('/api/v1/tracking', isUser, async (req, res) => {
     // const newday = await discExpr.debugAddDays(0)
     const todayis = discExpr.debugAddDays(0).split(',',1).toString()
     try {

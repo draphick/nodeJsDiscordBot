@@ -13,8 +13,10 @@
     "discord.js": "^11.5.1",
     "dotenv": "^8.2.0",
     "express": "^4.16.4",
+    "hbs": "^4.0.1",
     "mongodb": "^3.1.10",
     "mongoose": "^5.7.5",
+    "request": "^2.88.0",
     "validator": "^13.1.1"
   }
 }
